@@ -1,0 +1,13 @@
+/* styles.css */
+
+@media (max-width: 1024px) {
+  .ml-10 {
+    margin-left: 0;
+  }
+
+  /* .flex.items-center.justify-center {
+    flex-direction: column;
+  } */
+
+
+}

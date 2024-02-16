@@ -1,0 +1,16 @@
+@media screen and (max-width: 768px){
+    .showOn-Desk{
+        display: none;
+    }
+    .showOn-Mob{
+        display: block;
+    }
+}
+@media screen and (min-width: 768px){
+    .showOn-Desk{
+        display: block;
+    }
+    .showOn-Mob{
+        display: none;
+    }
+}
