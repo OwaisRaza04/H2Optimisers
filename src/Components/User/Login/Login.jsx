@@ -40,7 +40,9 @@ const Login = () => {
       const token = data.token;
       localStorage.setItem('token', token);
       localStorage.setItem('mail', formData.email)
+      localStorage.setItem('username',data.username)
       navigate("/mainpage")
+      
     }
     else {
       setAlertVisible(true)
@@ -54,13 +56,13 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen m-5 bg-gray-50">
+    <div className="flex items-center justify-center w-1/2 min-h-screen m-5 m-auto rounded-3xl">
 
       <div className='absolute w-1/3 m-3 top-3'>
         {alertVisible && (
-          <div className="alert" id="alert">
+          <div className="text-red-600 alert" id="alert">
             Wrong Credentials!
-            <span className="closebtn" onClick={() => setAlertVisible(false)}>
+            <span className="cursor-pointer closebtn" onClick={() => setAlertVisible(false)}>
               &times;
             </span>
           </div>
@@ -98,16 +100,16 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="px-4 py-2 text-white transition duration-300 bg-blue-500 rounded-md hover:bg-blue-600"
+            className="px-4 py-2 text-white transition duration-300 bg-blue-400 rounded-md hover:bg-blue-600"
           >
             Log In
           </button>
         </form>
         <Link to={'/forgotpassword'}><p className='mb-5 text-gray-500 cursor-pointer font-sm opacity-60'>Forgot Passsword</p></Link>
-        <p>Create An Account: <Link to={'/register'}> <span className='text-blue-500 cursor-pointer '> Register</span></Link></p>
+        <p>Don't have an account ?<Link to={'/register'}> <span className='text-blue-500 cursor-pointer '> Register</span></Link></p>
         <div className="mt-4">
           {/* leave it, We ll implement this late */}
-          <span className="p-2 text-sm text-white bg-red-500 border shadow-md cursor-pointer hover:bg-red-400">Continue with Google</span>
+          {/* <span className="p-2 text-sm text-white bg-red-500 border shadow-md cursor-pointer hover:bg-red-400">Continue with Google</span> */}
         </div>
       </div>
     </div>

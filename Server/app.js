@@ -117,7 +117,7 @@ app.post("/login", async (req, res) => {
     bcrypt.compare(password, user.password, function (err, result) {
       if (result) {
         const token = jwt.sign({ email: user.email }, "secretOrPrivateKey");
-        res.status(200).json({ token: token });
+        res.status(200).json({ token: token, username: user.fullName});
       } else {
         res.status(400).json({ message: "Wrong Password!!!" });
       }
@@ -158,6 +158,18 @@ app.post("/report", async (req, res) => {
   await report.save();
   res.status(200).json({ message: "Report Submitted Succesfully" });
 });
+
+app.post("/getuserdata", async (req, res) => {
+  var mail = req.body.mail;
+  try{
+  const user = await userModel.findOne({ email: mail});
+    res.status(200).json({user});
+  }
+  catch(err){
+    console.log(err)
+  }
+});
+
 
 app.post("/newPass", async (req, res) => {
   const token = req.body.token;

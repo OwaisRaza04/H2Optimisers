@@ -15,11 +15,17 @@ import MainPage from "./Components/User/MainPage/MainPage";
 import ConsumptionDetails from "./Components/User/ConsumptionDetails/ConsumptionDetails";
 import QualityDetails from "./Components/User/QualityDetails/QualityDetails";
 import Notifications from './Components/User/Notifications/Notifications';
+import UserProfile from "./Components/User/UserProfile/UserProfile";
+import AllData from "./Components/User/AllData/AllData";
+import ChangePassword from './Components/User/ChangePassword/ChangePassword';
+import ChangePasswordMessage from './Components/User/ChangePasswordMessage/ChangePasswordMessage';
+
+
 
 function App() {
   return (
     <>
-      {/* <BrowserRouter>
+      <BrowserRouter>
         <Routes>
             <Route path="*" element={<HomePage />} />
             <Route path="/login" element={<Login />} />
@@ -30,13 +36,23 @@ function App() {
             <Route path="/forgotpasswordmessage" element={<ForgotPasswordMessage />} />
             <Route path="/resetPassword" element={<ResetPassword />} />
             <Route path="/verifyEmail" element={<VerifyEmail/>} />
+            <Route path="/consumptiondetails" element={<ConsumptionDetails />} />
+            <Route path="/qualitydetails" element={<QualityDetails />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/userprofile" element={<UserProfile />} />
+            <Route path="/alldata" element={<AllData />} />
+            <Route path="/changepassword" element={<ChangePassword />} />
+            <Route path="/changepasswordmessage" element={<ChangePasswordMessage />} />
+            
+
+            
 
         </Routes>
-      </BrowserRouter> */}
+      </BrowserRouter>
       {/* <MainPage /> */}
-      {/* <ConsumptionDetails /> */}
+      {/*  */}
       {/* <QualityDetails />  */}
-      <Notifications />
+      {/* <Notifications /> */}
     </>
   );
 }

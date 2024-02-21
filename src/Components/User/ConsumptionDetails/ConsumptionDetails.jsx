@@ -5,20 +5,34 @@ import "./ConsumptionDetails.css";
 import ConservingTips from "../ConservingTips/ConservingTips";
 import waterWave1 from "../../../../public/images/waterWave.png";
 import waterWave2 from "../../../../public/images/waterWave2.png";
-import enviromentalImpact from "../../../../public/images/enviromentalImpact.png";
-import consumptionBar from "../../../../public/images/consumptionBar.png";
 import ProgressCircle from "../ProgressCircle/ProgressCircle";
 import Footer from "../Footer/Footer";
-import DailyConsumptionGraph from '../DailyConsumptionGraph/DailyConsumptionGraph';
-import MonthlyConsmpGraph from '../MonthlyConsmpGraph/MonthlyConsmpGraph';
+import DailyConsumptionGraph from "../DailyConsumptionGraph/DailyConsumptionGraph";
+import MonthlyConsmpGraph from "../MonthlyConsmpGraph/MonthlyConsmpGraph";
 
 const ConsumptionDetails = () => {
   const percentage = 20;
-  const [progress, setProgress] = useState(percentage);
   const [consumptionData, setConsumptionData] = useState(null);
+  const [lastMonthConsumpt, setlastMonthConsumpt] = useState();
+  const [lastDayConumpt, setlastDayConumpt] = useState();
   let monthlyUsage = new Array();
   let lastSevenMonData = new Array();
-  
+  let date = new Date();
+  var months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  console.log(date.getDate());
 
   const mail = localStorage.getItem("mail");
 
@@ -49,13 +63,30 @@ const ConsumptionDetails = () => {
   useEffect(() => {
     if (consumptionData && consumptionData.usage) {
       const arr = consumptionData.usage.data;
-      // getMonthlyData(arr);
-      let lastSeven = arr.slice(Math.max(arr.length - 7, 0));
-      console.log(lastSeven);
+      setlastDayConumpt(arr[arr.length - 1].waterUsage);
+      const getMonthlyData = (arr) => {
+        let sum = 0;
+        for (let i = 0; i < arr.length; i++) {
+          sum = 0;
+          for (let j = 0; j < 30; j++, i++) {
+            if (i >= arr.length) {
+              break;
+            }
+            sum += arr[i].waterUsage;
+          }
+          monthlyUsage.push(sum);
+        }
+        let j = monthlyUsage.length - 1;
+        for (let i = 0; i < 7; i++) {
+          lastSevenMonData[i] = monthlyUsage[j - (6 - i)];
+        }
+        console.log("lastSevenMonData" + lastSevenMonData);
+        console.log(lastSevenMonData[lastSevenMonData.length - 1]);
+        setlastMonthConsumpt(lastSevenMonData[lastSevenMonData.length - 1]);
+      };
+      getMonthlyData(arr);
     }
   }, [consumptionData]);
-  
-
 
   return (
     <div>
@@ -69,13 +100,15 @@ const ConsumptionDetails = () => {
             style={{ backgroundColor: "#b6e8fd" }}
             className="deks_consumption_data hidden md:block mx-auto w-1/2 py-1 px-4  border rounded-lg shadow-md font-bold tracking-[0.2rem] taxt-lg opacity-80 mb-10 text-black"
           >
-            <p className="text-center">Monthly Consumption : 1200 Ltr</p>
+            <p className="text-center">
+              Monthly Consumption : {Math.round(lastMonthConsumpt)} Ltr
+            </p>
           </span>
           <span
             style={{ backgroundColor: "#b6e8fd" }}
             className="mob_consumption_data block md:hidden mx-auto w-full py-1 px-4  border rounded-lg shadow-md font-bold tracking-[0.2rem] taxt-lg opacity-80 mb-10 text-black"
           >
-            <p className="text-center">Monthly Consumption : {1200} Ltr</p>
+            {/* <p className="text-center">Monthly Consumption : {lastMonthConsumpt} Ltrrr</p> */}
           </span>
           <div className="flex flex-wrap mt-10 -mx-4">
             <div className="relative w-full px-4 mb-4 md:w-1/2 lg:w-1/2 xl:w-1/2 mt-xs">
@@ -86,14 +119,7 @@ const ConsumptionDetails = () => {
                 >
                   Daily Consumption
                 </h1>
-                {/* <div className="">
-                  <img
-                    className="w-[17rem] m-auto mb-3"
-                    src={consumptionBar}
-                    alt=""
-                  />
-                </div> */}
-                <DailyConsumptionGraph />
+                <DailyConsumptionGraph consumptionData={consumptionData} />
                 <div className="relative">
                   <img
                     className="absolute w-full h-full rounded-xl"
@@ -106,7 +132,14 @@ const ConsumptionDetails = () => {
                     alt="water-drop"
                   />
                   <h1 className="absolute ml-6  lg:top-[5rem] font-bold text-2xl text-white">
-                    24.00 Ltr
+                    {date.getDate() +
+                      "/" +
+                      date.getMonth() +
+                      1 +
+                      "/" +
+                      date.getFullYear()}{" "}
+                    <br></br>
+                    {Math.round(lastDayConumpt)} Ltr
                   </h1>
                 </div>
               </div>
@@ -120,14 +153,10 @@ const ConsumptionDetails = () => {
                 >
                   Monthly Consumption
                 </h1>
-                {/* <div className="">
-                  <img
-                    className="w-[17rem] m-auto mb-3"
-                    src={consumptionBar}
-                    alt=""
-                  />
-                </div> */}
-                <MonthlyConsmpGraph />
+                <MonthlyConsmpGraph
+                  consumptionData={consumptionData}
+                  lastSevenMonData={lastSevenMonData}
+                />
                 <div className="relative">
                   <img
                     className="absolute w-full h-full rounded-xl"
@@ -140,7 +169,9 @@ const ConsumptionDetails = () => {
                     alt="water-drop"
                   />
                   <h1 className="absolute ml-6  lg:top-[5rem] font-bold text-2xl text-white">
-                    May, 2024
+                    {months[date.getMonth()] + " " + date.getFullYear()}
+                    <br></br>
+                    {Math.round(lastMonthConsumpt)} Ltr
                   </h1>
                 </div>
               </div>

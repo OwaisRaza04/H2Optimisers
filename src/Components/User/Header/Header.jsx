@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { HiUser, HiBell, HiChartBar, HiHome } from "react-icons/hi"; // Import icons from react-icons
 
 const Navbar = () => {
   const [greeting, setGreeting] = useState("");
-  const [name, setName] = useState("");
+  const name = localStorage.getItem("username");
 
   useEffect(() => {
     const currentDate = new Date();
     const currentHour = currentDate.getHours();
-
+    console.log(currentHour);
     if (currentHour >= 5 && currentHour < 12) {
       setGreeting("Good Morning");
     } else if (currentHour >= 12 && currentHour < 18) {
@@ -16,9 +17,6 @@ const Navbar = () => {
     } else {
       setGreeting("Good Evening");
     }
-
-    // For demonstration purposes, replace 'John Doe' with the actual user's name
-    setName("John Doe");
   }, []);
 
   return (
@@ -29,10 +27,19 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center gap-5 space-x-4 md:mr-[3.5rem] mr-0">
-        <HiHome className="text-2xl cursor-pointer" />
-        <HiChartBar className="text-2xl cursor-pointer" />
-        <HiBell className="text-2xl cursor-pointer" />
-        <HiUser className="text-2xl cursor-pointer" />
+        <Link to={"/mainpage"}>
+          {" "}
+          <HiHome className="text-2xl cursor-pointer" />
+        </Link>
+        <Link to={"/alldata"}>
+          <HiChartBar className="text-2xl cursor-pointer" />
+        </Link>
+        <Link to={"/notifications"}>
+          <HiBell className="text-2xl cursor-pointer" />
+        </Link>
+        <Link to={"/userprofile"}>
+          <HiUser className="text-2xl cursor-pointer" />
+        </Link>
       </div>
     </div>
   );

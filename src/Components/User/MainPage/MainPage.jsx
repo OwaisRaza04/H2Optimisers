@@ -1,6 +1,7 @@
 import React from "react";
 import "./MainPage.css";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Header from "../Header/Header";
 import waterDropImage from "../../../../public/images/waterDrop.png";
 import waterWave1 from "../../../../public/images/waterWave.png";
@@ -69,22 +70,19 @@ const MainPage = () => {
           },
           body: JSON.stringify({ mail: mail }),
         });
-  
+
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
-  
-        const data = await response.json(); 
+
+        const data = await response.json();
         setConsumptionData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-    }
-    getData();
+    };
+    getData();
 
-
-    
-   
     fetch("https://api.example.com/waterquality")
       .then((response) => response.json())
       .then((data) => {
@@ -115,7 +113,7 @@ const MainPage = () => {
   }, [mail]);
 
   useEffect(() => {
-    if (consumptionData && consumptionData.usage) { 
+    if (consumptionData && consumptionData.usage) {
       console.log(consumptionData.usage.deviceId);
     }
   }, [consumptionData]); // Trigger whenever consumptionData changes
@@ -152,7 +150,16 @@ const MainPage = () => {
                     <div className="px-6">
                       <h1 className="mb-2 font-semibold">{currentDateTime}</h1>
                       {/* <p className="text-md opacity-70">{consumptionData.amount}Ltr water </p> */}
-                      <p className="text-md opacity-70">{consumptionData ? consumptionData.usage.data[consumptionData.usage.data.length-1].waterUsage: '0'} L</p>
+                      <p className="text-md opacity-70">
+                        {consumptionData
+                          ? Number(
+                              consumptionData.usage.data[
+                                consumptionData.usage.data.length - 1
+                              ].waterUsage
+                            ).toFixed(2)
+                          : "0.00"}{" "}
+                        L
+                      </p>
                     </div>
                     <img
                       className="absolute top-0 right-10"
@@ -173,9 +180,11 @@ const MainPage = () => {
                     </div>
                   </div>
                   <div className=" btn absolute px-5 py-3 ml-6 text-white bg-blue-400 rounded-lg shadow-sm consumption-btn lg:top-[8rem]">
-                    <a className="m-auto font-bold cursor-pointer">
-                      Consumption
-                    </a>
+                    <Link to={"/consumptiondetails"}>
+                      <a className="m-auto font-bold cursor-pointer">
+                        Consumption
+                      </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -192,13 +201,18 @@ const MainPage = () => {
                       >
                         {waterQuality}
                       </span>
-                      {waterQuality === "Poor" && (
-                        <button
-                          onClick={toggleForm}
-                          className="px-4 ml-2 text-white bg-gray-400 rounded-md opacity-60"
-                        >
-                          Report
-                        </button>
+                     
+                      <button
+                        onClick={toggleForm}
+                        className="px-4 ml-2 text-white bg-gray-400 rounded-md opacity-60"
+                      >
+                        Report
+                      </button>
+                      
+                      {waterQuality == "Poor" && (
+                        <p className="text-red-600 opacity-70 text-[10px] ml-1 w-1/2">
+                        *We apologize for the inconvenience. Our team is actively working to resolve the issue related to poor water quality.
+                      </p>
                       )}
                     </div>
                     <img
@@ -220,9 +234,11 @@ const MainPage = () => {
                     </div>
                   </div>
                   <div className="btn absolute px-5 py-3 ml-6 text-white bg-blue-400 rounded-lg shadow-sm consumption-btn lg:top-[8rem]">
-                    <a className="m-auto font-bold cursor-pointer">
-                      View Quality Details
-                    </a>
+                    <Link to={"/qualitydetails"}>
+                      <a className="m-auto font-bold cursor-pointer">
+                        View Quality Details
+                      </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -271,46 +287,49 @@ const MainPage = () => {
                     </div>
                   </div>
                   <div className="ml-5">
-                  <GooglePayButton
-                    environment="TEST"
-                    paymentRequest={{
-                      apiVersion: 2,
-                      apiVersionMinor: 0,
-                      allowedPaymentMethods: [
-                        {
-                          type: "CARD",
-                          parameters: {
-                            allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
-                            allowedCardNetworks: ["MASTERCARD", "VISA"],
-                          },
-                          tokenizationSpecification: {
-                            type: "PAYMENT_GATEWAY",
+                    <GooglePayButton
+                      environment="TEST"
+                      paymentRequest={{
+                        apiVersion: 2,
+                        apiVersionMinor: 0,
+                        allowedPaymentMethods: [
+                          {
+                            type: "CARD",
                             parameters: {
-                              gateway: "example",
-                              gatewayMerchantId: "exampleGatewayMerchantId",
+                              allowedAuthMethods: [
+                                "PAN_ONLY",
+                                "CRYPTOGRAM_3DS",
+                              ],
+                              allowedCardNetworks: ["MASTERCARD", "VISA"],
+                            },
+                            tokenizationSpecification: {
+                              type: "PAYMENT_GATEWAY",
+                              parameters: {
+                                gateway: "example",
+                                gatewayMerchantId: "exampleGatewayMerchantId",
+                              },
                             },
                           },
+                        ],
+                        merchantInfo: {
+                          merchantId: "BCR2DN4T7WVMDYDN",
+                          merchantName: "Demo Merchant",
                         },
-                      ],
-                      merchantInfo: {
-                        merchantId: "BCR2DN4T7WVMDYDN",
-                        merchantName: "Demo Merchant",
-                      },
-                      transactionInfo: {
-                        totalPriceStatus: "FINAL",
-                        totalPriceLabel: "Total",
-                        totalPrice: "100.00",
-                        currencyCode: "USD",
-                        countryCode: "US",
-                      },
-                      onLoadPaymentData: (paymentRequest) => {
-                        console.log("load payment data", paymentRequest);
-                      },
-                    }}
-                    // buttonColor="blue"
-                    buttonColor="white"
-                    buttonType="plain"
-                  />
+                        transactionInfo: {
+                          totalPriceStatus: "FINAL",
+                          totalPriceLabel: "Total",
+                          totalPrice: "100.00",
+                          currencyCode: "USD",
+                          countryCode: "US",
+                        },
+                        onLoadPaymentData: (paymentRequest) => {
+                          console.log("load payment data", paymentRequest);
+                        },
+                      }}
+                      // buttonColor="blue"
+                      buttonColor="white"
+                      buttonType="plain"
+                    />
                   </div>
                 </div>
               </div>
