@@ -1,0 +1,10 @@
+@media (max-width: 640px) {
+    .mt-xs {
+      margin-top: 1.25rem; /* Adjust the value as needed */
+
+    }
+    .btn{
+        top: 5rem;
+    }
+    
+  }

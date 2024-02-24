@@ -12,11 +12,52 @@ import Footer from "../Footer/Footer";
 import PhGraph from "../PhGraph/PhGraph";
 import TurbidityGraph from "../TurbidityGraph/TurbidityGraph";
 import ChlorineGraph from "../ChlorineGraph/ChlorineGraph";
-import WaterQualityTips from '../QualityTips/QualityTips'
+import WaterQualityTips from "../QualityTips/QualityTips";
 
 const QualityDetails = () => {
-  const percentage = 20;
-  const [progress, setProgress] = useState(percentage);
+  const [consumptionData, setConsumptionData] = useState(null);
+  const [lastDaypH, setlastDaypH] = useState();
+  const [lastDayTurbidity, setlastDayTurbidity] = useState();
+  const [lastDayChlorine, setlastDayChlorine] = useState();
+
+  let date = new Date();
+
+  const mail = localStorage.getItem("mail");
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/getDeviceData", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ mail: mail }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+
+        const data = await response.json();
+        setConsumptionData(data);
+        
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    getData();
+  }, [mail]);
+
+  useEffect(() => {
+    if (consumptionData && consumptionData.usage) {
+      const arr = consumptionData.usage.data;
+      setlastDaypH(arr[arr.length - 1].pH);
+      setlastDayTurbidity(arr[arr.length - 1].turbidity);
+      setlastDayChlorine(arr[arr.length - 1].chlorine);
+      
+    }
+  }, [consumptionData]);
 
   return (
     <div>
@@ -35,19 +76,19 @@ const QualityDetails = () => {
               <p>
                 PH{" "}
                 <span className="px-2 ml-1 text-white bg-green-400 rounded-md shadow-md ">
-                  7.2
+                  {lastDaypH}
                 </span>
               </p>
               <p>
                 Turbidity{" "}
                 <span className="px-2 ml-1 ml-2 text-white bg-orange-400 rounded-md shadow-md ">
-                  1 NTU
+                  {lastDayTurbidity} NTU
                 </span>
               </p>
               <p>
                 Chlorine{" "}
                 <span className="px-2 ml-1 text-white bg-red-500 rounded-md shadow-md ">
-                  0.2 PPM
+                  {lastDayChlorine} PPM
                 </span>
               </p>
             </div>
@@ -89,7 +130,8 @@ const QualityDetails = () => {
                   Days Vs pH
                 </h1>
                 <div className="">
-                  <PhGraph />
+                  {consumptionData && <PhGraph consumptionData={consumptionData.usage.data} />}
+                  
                 </div>
               </div>
             </div>
@@ -104,7 +146,7 @@ const QualityDetails = () => {
                   Days vs Turbidity
                 </h1>
                 <div className="">
-                  <TurbidityGraph />
+                {consumptionData && <TurbidityGraph consumptionData={consumptionData.usage.data} />}
                 </div>
               </div>
             </div>
@@ -119,7 +161,7 @@ const QualityDetails = () => {
                   Days vs Chlorine
                 </h1>
                 <div className="">
-                  <ChlorineGraph />
+                {consumptionData && <ChlorineGraph consumptionData={consumptionData.usage.data} />}
                 </div>
               </div>
             </div>
@@ -160,7 +202,7 @@ const QualityDetails = () => {
                     <li className="mb-2">
                       Turbidity :{" "}
                       <span className="px-2 ml-1 text-white rounded-md shadow-md bg-slate-400">
-                        Less than 0.3 NTU
+                        Less than 4 NTU
                       </span>
                     </li>
                     <li className="mb-2">
@@ -178,33 +220,9 @@ const QualityDetails = () => {
                     read more
                   </a>
                 </div>
-                {/* </div> */}
               </div>
-              {/* <div className="bg-white shadow-lg rounded-xl">
-                <h1
-                  className="py-8 pb-0 m-5 text-lg font-semibold text-center"
-                  style={{ color: "#158df7" }}
-                >
-                  Safe Water Quality Values
-                </h1>
-
-                <div className="parameter">
-                  <h3>pH</h3>
-                  <p>Safe Range: 6.5 - 8.5</p>
-                </div>
-                <div className="parameter">
-                  <h3>Turbidity</h3>
-                  <p>Safe Level: Less than 0.3 NTU</p>
-                </div>
-                <div className="parameter">
-                  <h3>Chlorine</h3>
-                  <p>Safe Range: Varies (Check local regulations)</p>
-                </div>
-              </div> */}
             </div>
           </div>
-
-          {/* <WaterQualityTips /> */}
         </div>
       </div>
       <div>

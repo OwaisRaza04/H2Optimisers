@@ -8,6 +8,18 @@ const waterUsageSchema = new mongoose.Schema({
     waterUsage: {
         type: Number,
         required: true
+    },
+    chlorine:{
+        type:Number,
+        default:0.4
+    },
+    turbidity:{
+        type:Number,
+        default:2
+    },
+    pH:{
+        type:Number,
+        default:7.5
     }
 });
 

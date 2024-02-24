@@ -1,10 +1,17 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
 
-const ChlorineGraph = () => {
+const ChlorineGraph = ({consumptionData}) => {
   // Sample data (replace with your actual data)
   const weekdays = ['Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const chlorineValues = [1.2, 1.0, 1.5, 0.8, 1.3, 1.2, 1.4];
+  let chlorineValues = [1.2, 1.0, 1.5, 0.8, 1.3, 1.2, 1.4];
+
+
+  // Sample data (replace with your actual data)
+  let j = consumptionData.length - 1;
+  for (let i = 0; i < 7; i++) {
+    chlorineValues[i] = consumptionData[j - (6 - i)].chlorine
+  }
 
   // Create a trace for the plot
   const trace = {

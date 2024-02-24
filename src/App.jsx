@@ -19,6 +19,8 @@ import UserProfile from "./Components/User/UserProfile/UserProfile";
 import AllData from "./Components/User/AllData/AllData";
 import ChangePassword from './Components/User/ChangePassword/ChangePassword';
 import ChangePasswordMessage from './Components/User/ChangePasswordMessage/ChangePasswordMessage';
+import AdminDashboard from './Components/User/AdminDashboard/AdminDashboard';
+import AdminLogin from './Components/User/AdminLogin/AdminLogin';
 
 
 
@@ -43,6 +45,8 @@ function App() {
             <Route path="/alldata" element={<AllData />} />
             <Route path="/changepassword" element={<ChangePassword />} />
             <Route path="/changepasswordmessage" element={<ChangePasswordMessage />} />
+            <Route path="/adminlogin" element={<AdminLogin />} />
+            <Route path="/admindashboard" element={<AdminDashboard />} />
             
 
             

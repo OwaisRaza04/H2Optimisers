@@ -18,10 +18,17 @@ app.use(cors());
 
 async function subscribeAndHandle() {
   try {
+    const pH = Math.random() * (8.5 - 6.5) + 6.5;
+    const turbidity = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+    const chlorine = Math.random() * (4 - 0.2) + 0.2;
+
     const device = await connectAndSubscribe();
     console.log("Connected and subscribed successfully.");
     console.log(device);
     let waterUsage = JSON.parse(device).totalLitres_water;
+    waterUsage.pH = pH;
+    waterUsage.turbidity = turbidity;
+    waterUsage.chlorine = chlorine;
 
     const deviceId = "owaisraza7297@gmail.com";
     const Entry = await deviceModel.findOne({ deviceId });
@@ -109,6 +116,27 @@ app.post("/register", async (req, res) => {
   }
 });
 
+app.post("/getalluserdata", async (req, res) => {
+  try {
+    const users = await userModel.find({});
+    res.status(200).json({ users });
+  }
+  catch (err) {
+    console.log(err)
+  }
+});
+
+
+app.post("/getalldevicedata", async (req, res) => {
+  try {
+    const users = await deviceModel.find({});
+    res.status(200).json({ users });
+  } 
+  catch (err) {
+    console.log(err)
+  }
+});
+
 app.post("/login", async (req, res) => {
   var { email, password } = req.body;
 
@@ -117,7 +145,7 @@ app.post("/login", async (req, res) => {
     bcrypt.compare(password, user.password, function (err, result) {
       if (result) {
         const token = jwt.sign({ email: user.email }, "secretOrPrivateKey");
-        res.status(200).json({ token: token, username: user.fullName});
+        res.status(200).json({ token: token, username: user.fullName });
       } else {
         res.status(400).json({ message: "Wrong Password!!!" });
       }
@@ -161,15 +189,13 @@ app.post("/report", async (req, res) => {
 
 app.post("/getuserdata", async (req, res) => {
   var mail = req.body.mail;
-  try{
-  const user = await userModel.findOne({ email: mail});
-    res.status(200).json({user});
+  try {
+    const user = await userModel.findOne({ email: mail });
+    res.status(200).json({ user });
+  } catch (err) {
+    console.log(err);
   }
-  catch(err){
-    console.log(err)
-  }
 });
-
 
 app.post("/newPass", async (req, res) => {
   const token = req.body.token;
